@@ -6,6 +6,7 @@ import { IoEye, IoEyeOff } from 'react-icons/io5';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useRefreshStore } from '../stores/storeStudy';
+import { useQueryClient } from '@tanstack/react-query';
 
 
 /**
@@ -24,7 +25,7 @@ function useSignInAndUpInput({ id, type, name, placeholder, value, valid }) {
 
     const handleOnChange = (e) => {
         setInputValue(e.target.value);
-    }
+    };
 
     const handleOnBlur = (e) => {
         if(isEmpty(e.target.value)) {
@@ -135,6 +136,7 @@ function InputValidatedMessage({status, message}) {
 }
 
 function Signin() {
+    const queryClient = useQueryClient();
     const navigate = useNavigate();
     const location = useLocation();
     const { setValue: setRefresh } = useRefreshStore();
@@ -205,7 +207,9 @@ function Signin() {
             const accessToken = response.data?.accessToken;
             if (!!accessToken) {
                 localStorage.setItem("AccessToken", accessToken);
-                setRefresh(prev => true);
+                queryClient.invalidateQueries({
+                    queryKey: ["principalUserQuery"],
+                });
                 navigate("/");
             }
             alert("로그인 요청 완료")

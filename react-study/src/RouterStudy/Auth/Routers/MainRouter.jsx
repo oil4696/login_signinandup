@@ -44,7 +44,7 @@ function MainRouter(props) {
 
     return (
         <RootLayout>
-            <RootHeader isLogin={isLogin} setLogin={setLogin}/>
+            <RootHeader/>
             <Routes>
                 <Route path='' element={<Home />} />
                 <Route path='/auth/*' element={<AuthRouter />} />
